@@ -1,5 +1,4 @@
-// src/components/VpnStatus.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { List, ActionPanel, Action } from '@raycast/api';
 
 interface VpnStatusProps {
@@ -13,24 +12,34 @@ const VpnStatus: React.FC<VpnStatusProps> = ({
   serverCity,
   onToggleVpn,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleToggleVpn = async () => {
+    setIsLoading(true);
+    await onToggleVpn();
+    setIsLoading(false);
+  };
+
+  const vpnStatusText = vpnStatus ? "Deactivate Mozilla VPN" : "Activate Mozilla VPN";
+  const vpnStatusAction = vpnStatus ? "Deactivate VPN" : "Activate VPN";
+  const statusText = vpnStatus ? "Connected" : "Disconnected";
+
   return (
-    <>
-      <List.Item
-        title={vpnStatus ? 'Deactivate Mozilla VPN' : 'Activate Mozilla VPN'}
-        subtitle={`VPN Server City: ${serverCity}`}
-        accessories={[
-          { text: `Status: ${vpnStatus ? 'Connected' : 'Disconnected'}` },
-        ]}
-        actions={
-          <ActionPanel>
-            <Action
-              title={vpnStatus ? 'Deactivate VPN' : 'Activate VPN'}
-              onAction={onToggleVpn}
-            />
-          </ActionPanel>
-        }
-      />
-    </>
+    <List.Item
+      title={vpnStatusText}
+      subtitle={`VPN Server City: ${serverCity}`}
+      accessories={[{ text: `Status: ${statusText}` }]}
+      actions={
+        <ActionPanel>
+          <Action
+            title={vpnStatusAction}
+            onAction={handleToggleVpn}
+            shortcut={{ modifiers: ["cmd"], key: "k" }}
+            icon={isLoading ? "⏳" : undefined}
+          />
+        </ActionPanel>
+      }
+    />
   );
 };
 
