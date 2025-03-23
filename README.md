@@ -9,6 +9,7 @@ _Interact with the Mozilla VPN client from Raycast without even opening the Mozi
 - It connects using the Mozilla VPN client to the Mozilla VPN service.
 - It displays the current server the Mozilla VPN client is configured for.
 - It fetches the current external IP and geolocates the IP's Country and city. It then refreshes when it connects to the VPN.
+- It allows you to change the server from the UI. You select a Country and city if available and if there are multiple VPN servers, it will randomly choose one to connect to.
 
 
 
