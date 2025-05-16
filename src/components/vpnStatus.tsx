@@ -18,17 +18,18 @@ const VpnStatus: React.FC<VpnStatusProps> = ({
   onSelectServer,
 }) => {
   // Determine appropriate icons and colors based on VPN status
-  const statusIcon = vpnStatus 
-    ? { source: Icon.Lock, tintColor: Color.Green } 
+  const statusIcon = vpnStatus
+    ? { source: Icon.Lock, tintColor: Color.Green }
     : { source: Icon.LockUnlocked, tintColor: Color.Red };
-  
+
   const title = vpnStatus ? 'Deactivate Mozilla VPN' : 'Activate Mozilla VPN';
   const actionTitle = vpnStatus ? 'Disconnect VPN' : 'Connect VPN';
-  
+
   // Format server info
-  const serverInfo = serverCity && serverCountry 
-    ? `${serverCity}, ${serverCountry}` 
-    : 'Unknown location';
+  const serverInfo =
+    serverCity && serverCountry
+      ? `${serverCity}, ${serverCountry}`
+      : 'Unknown location';
 
   // Create a proper accessory text for the server
   const serverAccessoryText = `Configured Server: ${serverInfo}`;
@@ -39,13 +40,13 @@ const VpnStatus: React.FC<VpnStatusProps> = ({
       icon={statusIcon}
       accessories={[
         { text: serverAccessoryText, icon: Icon.Globe },
-        { 
-          text: vpnStatus ? 'Connected' : 'Disconnected', 
-          icon: { 
+        {
+          text: vpnStatus ? 'Connected' : 'Disconnected',
+          icon: {
             source: vpnStatus ? Icon.CheckCircle : Icon.XmarkCircle,
-            tintColor: vpnStatus ? Color.Green : Color.Red
-          }
-        }
+            tintColor: vpnStatus ? Color.Green : Color.Red,
+          },
+        },
       ]}
       actions={
         <ActionPanel>

@@ -34,17 +34,17 @@ const CheckLogin: React.FC<CheckLoginProps> = ({ onBack }) => {
       actions={
         <ActionPanel>
           <ActionPanel.Section>
-            <Action title="Open Mozilla VPN" onAction={openMozillaVpnApp} />
+            <Action title="Open Mozilla Vpn" onAction={openMozillaVpnApp} />
           </ActionPanel.Section>
-          
+
           {/* Add Back to Main Menu action if onBack is provided */}
           {onBack && (
             <ActionPanel.Section>
-              <Action 
-                title="Back to Main Menu" 
+              <Action
+                title="Back to Main Menu"
                 icon={Icon.ArrowLeft}
-                onAction={onBack} 
-                shortcut={{ modifiers: ["cmd"], key: "b" }}
+                onAction={onBack}
+                shortcut={{ modifiers: ['cmd'], key: 'b' }}
               />
             </ActionPanel.Section>
           )}

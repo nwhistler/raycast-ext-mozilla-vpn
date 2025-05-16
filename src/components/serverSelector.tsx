@@ -1,64 +1,94 @@
 // src/components/serverSelector.tsx
 import React, { useState, useEffect, useCallback } from 'react';
-import { List, ActionPanel, Action, showToast, Toast, Icon } from '@raycast/api';
-import { fetchServerLocations, selectRandomServerFromCity, CountryLocation } from '../utils/serverUtils';
+import {
+  List,
+  ActionPanel,
+  Action,
+  showToast,
+  Toast,
+  Icon,
+} from '@raycast/api';
+import {
+  fetchServerLocations,
+  selectRandomServerFromCity,
+  CountryLocation,
+} from '../utils/serverUtils';
 
 export interface ServerSelectorProps {
   onServerSelected: () => void | Promise<void>;
   onBack?: () => void;
 }
 
-const ServerSelector: React.FC<ServerSelectorProps> = ({ onServerSelected, onBack }) => {
+const ServerSelector: React.FC<ServerSelectorProps> = ({
+  onServerSelected,
+  onBack,
+}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [locations, setLocations] = useState<CountryLocation[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState<CountryLocation | null>(null);
+  const [selectedCountry, setSelectedCountry] =
+    useState<CountryLocation | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [searchText, setSearchText] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>('');
 
   // Clear search text when changing views
   useEffect(() => {
-    setSearchText("");
+    setSearchText('');
   }, [selectedCountry]);
-  
+
   // Function to handle country selection
   const handleCountrySelect = useCallback((country: CountryLocation) => {
     setSelectedCountry(country);
   }, []);
-  
+
   // Function to handle city selection
-  const handleCitySelect = useCallback(async (country: CountryLocation, city: { cityName: string; cityCode: string; servers: string[] }) => {
-    try {
-      setIsLoading(true);
-      
-      // Show an immediate toast to indicate the process has started
-      await showToast({
-        style: Toast.Style.Animated,
-        title: `Configuring server location: ${city.cityName}...`,
-      });
-      
-      const success = await selectRandomServerFromCity(
-        country.countryCode, 
-        city.cityCode
-      );
-      
-      if (success) {
-        // Use more accurate messaging
-        await showToast(Toast.Style.Success, `Server location set to ${city.cityName}, ${country.country}`);
-        
-        // Wait a moment before returning to main view
-        setTimeout(() => {
-          onServerSelected();
-        }, 500);
-      } else {
-        await showToast(Toast.Style.Failure, `Failed to set server location to ${city.cityName}`);
+  const handleCitySelect = useCallback(
+    async (
+      country: CountryLocation,
+      city: { cityName: string; cityCode: string; servers: string[] }
+    ) => {
+      try {
+        setIsLoading(true);
+
+        // Show an immediate toast to indicate the process has started
+        await showToast({
+          style: Toast.Style.Animated,
+          title: `Configuring server location: ${city.cityName}...`,
+        });
+
+        const success = await selectRandomServerFromCity(
+          country.countryCode,
+          city.cityCode
+        );
+
+        if (success) {
+          // Use more accurate messaging
+          await showToast(
+            Toast.Style.Success,
+            `Server location set to ${city.cityName}, ${country.country}`
+          );
+
+          // Wait a moment before returning to main view
+          setTimeout(() => {
+            onServerSelected();
+          }, 500);
+        } else {
+          await showToast(
+            Toast.Style.Failure,
+            `Failed to set server location to ${city.cityName}`
+          );
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error('Failed to select server:', error);
+        await showToast(
+          Toast.Style.Failure,
+          'Failed to configure server location'
+        );
         setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Failed to select server:', error);
-      await showToast(Toast.Style.Failure, 'Failed to configure server location');
-      setIsLoading(false);
-    }
-  }, [onServerSelected]);
+    },
+    [onServerSelected]
+  );
 
   useEffect(() => {
     const loadServers = async () => {
@@ -79,17 +109,18 @@ const ServerSelector: React.FC<ServerSelectorProps> = ({ onServerSelected, onBac
   }, []);
 
   // Filter countries based on search text
-  const filteredCountries = locations.filter(country => 
-    searchText === "" || 
-    country.country.toLowerCase().includes(searchText.toLowerCase()) ||
-    country.countryCode.toLowerCase().includes(searchText.toLowerCase())
+  const filteredCountries = locations.filter(
+    (country) =>
+      searchText === '' ||
+      country.country.toLowerCase().includes(searchText.toLowerCase()) ||
+      country.countryCode.toLowerCase().includes(searchText.toLowerCase())
   );
 
   // When in country view (no country selected)
   if (!selectedCountry) {
     return (
-      <List 
-        isLoading={isLoading} 
+      <List
+        isLoading={isLoading}
         searchBarPlaceholder="Search countries..."
         navigationTitle="Select VPN Server Location"
         searchText={searchText}
@@ -102,31 +133,34 @@ const ServerSelector: React.FC<ServerSelectorProps> = ({ onServerSelected, onBac
             icon={Icon.Warning}
             actions={
               <ActionPanel>
-                <Action 
-                  title="Try Again" 
+                <Action
+                  title="Try Again"
                   icon={Icon.RotateClockwise}
                   onAction={() => {
                     setIsLoading(true);
                     setError(null);
                     fetchServerLocations()
-                      .then(data => {
+                      .then((data) => {
                         setLocations(data);
                         setIsLoading(false);
                       })
-                      .catch(err => {
+                      .catch((err) => {
                         console.error('Retry failed:', err);
                         setError('Failed to load server locations');
                         setIsLoading(false);
-                        showToast(Toast.Style.Failure, 'Failed to load server locations');
+                        showToast(
+                          Toast.Style.Failure,
+                          'Failed to load server locations'
+                        );
                       });
-                  }} 
+                  }}
                 />
                 {onBack && (
-                  <Action 
-                    title="Back to Main Menu" 
+                  <Action
+                    title="Back to Main Menu"
                     icon={Icon.ArrowLeft}
-                    onAction={onBack} 
-                    shortcut={{ modifiers: ["cmd"], key: "b" }}
+                    onAction={onBack}
+                    shortcut={{ modifiers: ['cmd'], key: 'b' }}
                   />
                 )}
               </ActionPanel>
@@ -145,20 +179,20 @@ const ServerSelector: React.FC<ServerSelectorProps> = ({ onServerSelected, onBac
               actions={
                 <ActionPanel>
                   <ActionPanel.Section>
-                    <Action 
-                      title={`Select ${country.country}`} 
+                    <Action
+                      title={`Select ${country.country}`}
                       icon={Icon.Globe}
-                      onAction={() => handleCountrySelect(country)} 
-                      shortcut={{ modifiers: ["cmd"], key: "return" }}
+                      onAction={() => handleCountrySelect(country)}
+                      shortcut={{ modifiers: ['cmd'], key: 'return' }}
                     />
                   </ActionPanel.Section>
                   {onBack && (
                     <ActionPanel.Section>
-                      <Action 
-                        title="Back to Main Menu" 
+                      <Action
+                        title="Back to Main Menu"
                         icon={Icon.ArrowLeft}
-                        onAction={onBack} 
-                        shortcut={{ modifiers: ["cmd"], key: "b" }}
+                        onAction={onBack}
+                        shortcut={{ modifiers: ['cmd'], key: 'b' }}
                       />
                     </ActionPanel.Section>
                   )}
@@ -167,7 +201,7 @@ const ServerSelector: React.FC<ServerSelectorProps> = ({ onServerSelected, onBac
             />
           ))
         )}
-        
+
         {filteredCountries.length === 0 && !error && !isLoading && (
           <List.EmptyView
             title="No Countries Found"
@@ -175,17 +209,17 @@ const ServerSelector: React.FC<ServerSelectorProps> = ({ onServerSelected, onBac
             icon={Icon.Globe}
             actions={
               <ActionPanel>
-                <Action 
-                  title="Clear Search" 
+                <Action
+                  title="Clear Search"
                   icon={Icon.Trash}
-                  onAction={() => setSearchText("")} 
+                  onAction={() => setSearchText('')}
                 />
                 {onBack && (
-                  <Action 
-                    title="Back to Main Menu" 
+                  <Action
+                    title="Back to Main Menu"
                     icon={Icon.ArrowLeft}
-                    onAction={onBack} 
-                    shortcut={{ modifiers: ["cmd"], key: "b" }}
+                    onAction={onBack}
+                    shortcut={{ modifiers: ['cmd'], key: 'b' }}
                   />
                 )}
               </ActionPanel>
@@ -198,12 +232,13 @@ const ServerSelector: React.FC<ServerSelectorProps> = ({ onServerSelected, onBac
 
   // When a country is selected, show its cities
   // Filter cities based on search text
-  const filteredCities = selectedCountry.cities.filter(city => 
-    searchText === "" || 
-    city.cityName.toLowerCase().includes(searchText.toLowerCase()) ||
-    city.cityCode.toLowerCase().includes(searchText.toLowerCase())
+  const filteredCities = selectedCountry.cities.filter(
+    (city) =>
+      searchText === '' ||
+      city.cityName.toLowerCase().includes(searchText.toLowerCase()) ||
+      city.cityCode.toLowerCase().includes(searchText.toLowerCase())
   );
-  
+
   return (
     <List
       isLoading={isLoading}
@@ -213,7 +248,7 @@ const ServerSelector: React.FC<ServerSelectorProps> = ({ onServerSelected, onBac
       onSearchTextChange={setSearchText}
     >
       <List.Section title={selectedCountry.country}>
-        {filteredCities.map(city => (
+        {filteredCities.map((city) => (
           <List.Item
             key={city.cityCode}
             title={city.cityName}
@@ -225,23 +260,23 @@ const ServerSelector: React.FC<ServerSelectorProps> = ({ onServerSelected, onBac
                   <Action
                     title={`Set Server to ${city.cityName}`}
                     icon={Icon.Globe}
-                    shortcut={{ modifiers: ["cmd"], key: "return" }}
+                    shortcut={{ modifiers: ['cmd'], key: 'return' }}
                     onAction={() => handleCitySelect(selectedCountry, city)}
                   />
-                  <Action 
-                    title="Back to Countries" 
+                  <Action
+                    title="Back to Countries"
                     icon={Icon.ArrowLeft}
-                    shortcut={{ modifiers: ["cmd"], key: "b" }}
-                    onAction={() => setSelectedCountry(null)} 
+                    shortcut={{ modifiers: ['cmd'], key: 'b' }}
+                    onAction={() => setSelectedCountry(null)}
                   />
                 </ActionPanel.Section>
                 {onBack && (
                   <ActionPanel.Section>
-                    <Action 
-                      title="Back to Main Menu" 
+                    <Action
+                      title="Back to Main Menu"
                       icon={Icon.ArrowLeft}
-                      onAction={onBack} 
-                      shortcut={{ modifiers: ["cmd"], key: "backspace" }}
+                      onAction={onBack}
+                      shortcut={{ modifiers: ['cmd'], key: 'backspace' }}
                     />
                   </ActionPanel.Section>
                 )}
@@ -250,7 +285,7 @@ const ServerSelector: React.FC<ServerSelectorProps> = ({ onServerSelected, onBac
           />
         ))}
       </List.Section>
-      
+
       {filteredCities.length === 0 && !isLoading && (
         <List.EmptyView
           title="No Cities Found"
@@ -259,25 +294,25 @@ const ServerSelector: React.FC<ServerSelectorProps> = ({ onServerSelected, onBac
           actions={
             <ActionPanel>
               <ActionPanel.Section>
-                <Action 
-                  title="Clear Search" 
+                <Action
+                  title="Clear Search"
                   icon={Icon.Trash}
-                  onAction={() => setSearchText("")} 
+                  onAction={() => setSearchText('')}
                 />
-                <Action 
-                  title="Back to Countries" 
+                <Action
+                  title="Back to Countries"
                   icon={Icon.ArrowLeft}
-                  onAction={() => setSelectedCountry(null)} 
-                  shortcut={{ modifiers: ["cmd"], key: "b" }}
+                  onAction={() => setSelectedCountry(null)}
+                  shortcut={{ modifiers: ['cmd'], key: 'b' }}
                 />
               </ActionPanel.Section>
               {onBack && (
                 <ActionPanel.Section>
-                  <Action 
-                    title="Back to Main Menu" 
+                  <Action
+                    title="Back to Main Menu"
                     icon={Icon.ArrowLeft}
-                    onAction={onBack} 
-                    shortcut={{ modifiers: ["cmd"], key: "backspace" }}
+                    onAction={onBack}
+                    shortcut={{ modifiers: ['cmd'], key: 'backspace' }}
                   />
                 </ActionPanel.Section>
               )}

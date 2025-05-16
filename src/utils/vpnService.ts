@@ -43,24 +43,24 @@ export const checkVpnStatus = async (): Promise<VpnStatus> => {
     const stdout = await executeCommand(
       '/Applications/Mozilla\\ VPN.app/Contents/MacOS/Mozilla\\ VPN status'
     );
-    
+
     // Log the full output for debugging
     console.log(`Raw VPN status output:\n${stdout}`);
-    
+
     const isActive = stdout.includes('VPN state: on');
     const isAuthenticated = !stdout.includes('User status: not authenticated');
-    
+
     // Extract server city and country with improved parsing
     let serverCity = 'Unknown';
     let serverCountry = 'Unknown';
-    
+
     // Try to find the city with more robust pattern matching
     const cityPatterns = [
       /Server city: ([^,\n]+)/i,
       /Server: ([^,\n]+)/i,
-      /Location: ([^,\n]+)/i
+      /Location: ([^,\n]+)/i,
     ];
-    
+
     for (const pattern of cityPatterns) {
       const match = stdout.match(pattern);
       if (match && match[1] && match[1].trim()) {
@@ -68,13 +68,13 @@ export const checkVpnStatus = async (): Promise<VpnStatus> => {
         break;
       }
     }
-    
+
     // Try to find the country with more robust pattern matching
     const countryPatterns = [
       /Server country: ([^,\n]+)/i,
-      /Country: ([^,\n]+)/i
+      /Country: ([^,\n]+)/i,
     ];
-    
+
     for (const pattern of countryPatterns) {
       const match = stdout.match(pattern);
       if (match && match[1] && match[1].trim()) {
@@ -82,7 +82,7 @@ export const checkVpnStatus = async (): Promise<VpnStatus> => {
         break;
       }
     }
-    
+
     // If we found a city but not a country, try to extract from combined pattern
     if (serverCity !== 'Unknown' && serverCountry === 'Unknown') {
       const combinedMatch = stdout.match(/Server: ([^,]+), ([^\n]+)/i);
@@ -90,9 +90,11 @@ export const checkVpnStatus = async (): Promise<VpnStatus> => {
         serverCountry = combinedMatch[2].trim();
       }
     }
-    
-    console.log(`Parsed server info: City=${serverCity}, Country=${serverCountry}, Active=${isActive}`);
-    
+
+    console.log(
+      `Parsed server info: City=${serverCity}, Country=${serverCountry}, Active=${isActive}`
+    );
+
     return { isActive, serverCity, serverCountry, isAuthenticated };
   } catch (err) {
     console.error('Error checking VPN status:', err);

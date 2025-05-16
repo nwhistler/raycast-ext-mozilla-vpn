@@ -18,17 +18,18 @@ const VpnStatus: React.FC<VpnStatusProps> = ({
   onSelectServer,
 }) => {
   // Determine appropriate icons and colors based on VPN status
-  const statusIcon = vpnStatus 
-    ? { source: Icon.Lock, tintColor: Color.Green } 
+  const statusIcon = vpnStatus
+    ? { source: Icon.Lock, tintColor: Color.Green }
     : { source: Icon.LockUnlocked, tintColor: Color.Red };
-  
+
   const title = vpnStatus ? 'Deactivate Mozilla VPN' : 'Activate Mozilla VPN';
   const actionTitle = vpnStatus ? 'Disconnect VPN' : 'Connect VPN';
-  
+
   // Format server info
-  const serverInfo = serverCity && serverCountry 
-    ? `${serverCity}, ${serverCountry}` 
-    : 'Unknown location';
+  const serverInfo =
+    serverCity && serverCountry
+      ? `${serverCity}, ${serverCountry}`
+      : 'Unknown location';
 
   return (
     <List.Item
@@ -36,13 +37,13 @@ const VpnStatus: React.FC<VpnStatusProps> = ({
       icon={statusIcon}
       accessories={[
         { text: serverInfo, icon: Icon.Globe },
-        { 
-          text: vpnStatus ? 'Connected' : 'Disconnected', 
-          icon: { 
+        {
+          text: vpnStatus ? 'Connected' : 'Disconnected',
+          icon: {
             source: vpnStatus ? Icon.CheckCircle : Icon.XmarkCircle,
-            tintColor: vpnStatus ? Color.Green : Color.Red
-          }
-        }
+            tintColor: vpnStatus ? Color.Green : Color.Red,
+          },
+        },
       ]}
       actions={
         <ActionPanel>
@@ -54,7 +55,7 @@ const VpnStatus: React.FC<VpnStatusProps> = ({
           <Action
             title="Change Server"
             icon={Icon.Globe}
-            shortcut={{ modifiers: ["cmd"], key: "s" }}
+            shortcut={{ modifiers: ['cmd'], key: 's' }}
             onAction={onSelectServer}
           />
         </ActionPanel>

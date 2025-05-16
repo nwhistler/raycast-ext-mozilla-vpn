@@ -32,7 +32,7 @@ export function parseServersOutput(output: string): CountryLocation[] {
       currentCountry = {
         country: countryMatch[1],
         countryCode: countryMatch[2],
-        cities: []
+        cities: [],
       };
       locations.push(currentCountry);
       continue;
@@ -43,7 +43,7 @@ export function parseServersOutput(output: string): CountryLocation[] {
       currentCity = {
         cityName: cityMatch[1],
         cityCode: cityMatch[2],
-        servers: []
+        servers: [],
       };
       currentCountry.cities.push(currentCity);
       continue;
@@ -103,30 +103,31 @@ export const selectRandomServerFromCity = async (
 ): Promise<boolean> => {
   try {
     const locations = await fetchServerLocations();
-    const country = locations.find(c => c.countryCode === countryCode);
-    
+    const country = locations.find((c) => c.countryCode === countryCode);
+
     if (!country) {
       await showToast(Toast.Style.Failure, `Country not found: ${countryCode}`);
       return false;
     }
-    
-    const city = country.cities.find(city => city.cityCode === cityCode);
-    
+
+    const city = country.cities.find((city) => city.cityCode === cityCode);
+
     if (!city || city.servers.length === 0) {
       await showToast(Toast.Style.Failure, `No servers found in ${cityCode}`);
       return false;
     }
-    
+
     // Pick a random server
-    const randomServer = city.servers[Math.floor(Math.random() * city.servers.length)];
+    const randomServer =
+      city.servers[Math.floor(Math.random() * city.servers.length)];
     console.log(`Selecting random server: ${randomServer}`);
-    
+
     // Select the server
     await selectServer(randomServer);
-    
+
     // Small delay to let the selection take effect
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     return true;
   } catch (error) {
     console.error('Error selecting random server:', error);

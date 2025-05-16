@@ -19,15 +19,15 @@ const ServerDetails: React.FC<ServerDetailsProps> = ({
   isConnected,
   onToggleVpn,
   onSelectServer,
-  onBack
+  onBack,
 }) => {
   const statusText = isConnected ? 'Connected' : 'Disconnected';
   const actionTitle = isConnected ? 'Disconnect VPN' : 'Connect VPN';
   const actionIcon = isConnected ? Icon.Stop : Icon.Play;
-  
+
   // Using emoji for color instead of HTML spans
   const statusEmoji = isConnected ? '🟢' : '🔴';
-  
+
   const markdown = `
   # Mozilla VPN Status
 
@@ -37,15 +37,19 @@ const ServerDetails: React.FC<ServerDetailsProps> = ({
   - **IP Address**: ${ipAddress}
 
   ## Connection Details
-  ${isConnected ? `
+  ${
+    isConnected
+      ? `
   Your connection to Mozilla VPN is currently active. All your internet traffic is being routed through the VPN server in ${serverCity}, ${serverCountry}.
   
   Your real IP address is hidden, and websites see your VPN IP address (${ipAddress}).
-  ` : `
+  `
+      : `
   Your connection to Mozilla VPN is currently inactive. Your internet traffic is not being protected by the VPN.
   
   Your current IP address (${ipAddress}) is visible to websites you visit.
-  `}
+  `
+  }
 
   ## Mozilla VPN Features
   - **Privacy**: Encrypts your internet connection
@@ -63,7 +67,10 @@ const ServerDetails: React.FC<ServerDetailsProps> = ({
           <Detail.Metadata.Label
             title="Status"
             text={statusText}
-            icon={{ source: isConnected ? Icon.CheckCircle : Icon.XmarkCircle, tintColor: isConnected ? Color.Green : Color.Red }}
+            icon={{
+              source: isConnected ? Icon.CheckCircle : Icon.XmarkCircle,
+              tintColor: isConnected ? Color.Green : Color.Red,
+            }}
           />
           <Detail.Metadata.Label
             title="Server Location"
@@ -78,7 +85,7 @@ const ServerDetails: React.FC<ServerDetailsProps> = ({
           <Detail.Metadata.Separator />
           <Detail.Metadata.Label
             title="Connection"
-            text={isConnected ? "Encrypted" : "Not Encrypted"}
+            text={isConnected ? 'Encrypted' : 'Not Encrypted'}
             icon={isConnected ? Icon.Lock : Icon.LockUnlocked}
           />
         </Detail.Metadata>
@@ -97,15 +104,15 @@ const ServerDetails: React.FC<ServerDetailsProps> = ({
               onAction={onSelectServer}
             />
           </ActionPanel.Section>
-          
+
           {/* Add Back to Main Menu action if onBack is provided */}
           {onBack && (
             <ActionPanel.Section>
-              <Action 
-                title="Back to Main Menu" 
+              <Action
+                title="Back to Main Menu"
                 icon={Icon.ArrowLeft}
-                onAction={onBack} 
-                shortcut={{ modifiers: ["cmd"], key: "b" }}
+                onAction={onBack}
+                shortcut={{ modifiers: ['cmd'], key: 'b' }}
               />
             </ActionPanel.Section>
           )}
