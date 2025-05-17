@@ -15,9 +15,9 @@ interface CheckLoginProps {
 }
 
 const openMozillaVpnApp = () => {
-  exec('open -a "Mozilla VPN"', (error) => {
+  exec('open -a "Mozilla Vpn"', (error) => {
     if (error) {
-      console.error('Error opening Mozilla VPN:', error);
+      console.error('Error opening Mozilla Vpn:', error);
     } else {
       popToRoot();
       closeMainWindow();
@@ -28,8 +28,8 @@ const openMozillaVpnApp = () => {
 const CheckLogin: React.FC<CheckLoginProps> = ({ onBack }) => {
   return (
     <List.EmptyView
-      title="Mozilla VPN Login Required"
-      description="Please log in using the Mozilla VPN application. Press Enter to open the app."
+      title="Mozilla Vpn Login Required"
+      description="Please log in using the Mozilla Vpn application. Press Enter to open the app."
       icon="Icon.ExclamationMark"
       actions={
         <ActionPanel>

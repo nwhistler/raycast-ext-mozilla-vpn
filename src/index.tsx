@@ -16,7 +16,7 @@ import ServerSelector from './components/serverSelector';
 import ServerDetails from './components/serverDetails';
 import fs from 'fs';
 
-const MOZILLA_VPN_PATH = '/Applications/Mozilla VPN.app';
+const MOZILLA_VPN_PATH = '/Applications/Mozilla Vpn.app';
 
 // Define view types for navigation
 type ViewType = 'main' | 'serverSelector' | 'serverDetails';
@@ -25,7 +25,7 @@ const isMozillaVpnInstalled = () => {
   try {
     return fs.existsSync(MOZILLA_VPN_PATH);
   } catch (error) {
-    console.error('Error checking Mozilla VPN installation:', error);
+    console.error('Error checking Mozilla Vpn installation:', error);
     return false;
   }
 };
@@ -63,7 +63,7 @@ const Command: React.FC = () => {
     // Show the initial loading toast
     const loadingToast = await showToast({
       style: Toast.Style.Animated,
-      title: `${actionText} Mozilla VPN...`,
+      title: `${actionText} Mozilla Vpn...`,
     });
 
     // Set a timeout to prevent the function from hanging indefinitely
@@ -372,8 +372,8 @@ const Command: React.FC = () => {
           setIsLoading(false);
         }
       } else {
-        setIsLoading(false); // Stop loading if Mozilla VPN is not installed
-        setErrorMessage('Mozilla VPN application is not installed.');
+        setIsLoading(false); // Stop loading if Mozilla Vpn is not installed
+        setErrorMessage('Mozilla Vpn application is not installed.');
       }
     };
 
@@ -420,7 +420,7 @@ const Command: React.FC = () => {
     return (
       <List>
         <List.EmptyView
-          title="Mozilla VPN Error"
+          title="Mozilla Vpn Error"
           description={errorMessage}
           icon={{ source: Icon.Warning, tintColor: Color.Red }}
           actions={
@@ -485,7 +485,7 @@ const Command: React.FC = () => {
     case 'main':
     default:
       return (
-        <List isLoading={isLoading} navigationTitle="Mozilla VPN Connect">
+        <List isLoading={isLoading} navigationTitle="Mozilla Vpn Connect">
           <List.Section title="VPN Controls">
             <VpnStatus
               vpnStatus={vpnStatus}
