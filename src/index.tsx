@@ -501,9 +501,14 @@ const Command: React.FC = () => {
               title="Current IP Address and Location"
               subtitle={currentIP}
               icon={{ source: Icon.Network }}
+              accessories={[{ icon: Icon.Eye }]}
               actions={
                 <ActionPanel>
-                  <Action title="" />
+                  <Action
+                    title="View Vpn Details"
+                    icon={Icon.Sidebar}
+                    onAction={() => navigateTo('serverDetails')}
+                  />
                   <Action
                     title="Refresh Ip and Location"
                     icon={Icon.RotateClockwise}
@@ -519,7 +524,7 @@ const Command: React.FC = () => {
                           Toast.Style.Success,
                           'IP information updated'
                         );
-                      } catch {
+                      } catch (error) {
                         await showToast(
                           Toast.Style.Failure,
                           'Failed to update IP information'
@@ -534,7 +539,6 @@ const Command: React.FC = () => {
             <List.Item
               title="View Detailed VPN Status"
               icon={{ source: Icon.Sidebar }}
-              accessories={[{ icon: Icon.Eye }]}
               actions={
                 <ActionPanel>
                   <Action
