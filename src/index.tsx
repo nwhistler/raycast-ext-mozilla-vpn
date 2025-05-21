@@ -501,13 +501,10 @@ const Command: React.FC = () => {
               title="Current IP Address and Location"
               subtitle={currentIP}
               icon={{ source: Icon.Network }}
-              accessories={[{ icon: Icon.Eye }]}
               actions={
                 <ActionPanel>
                   <Action
-                    title="View Vpn Details"
-                    icon={Icon.Sidebar}
-                    onAction={() => navigateTo('serverDetails')}
+                    title=""
                   />
                   <Action
                     title="Refresh Ip and Location"
@@ -539,6 +536,7 @@ const Command: React.FC = () => {
             <List.Item
               title="View Detailed VPN Status"
               icon={{ source: Icon.Sidebar }}
+              accessories={[{ icon: Icon.Eye }]}
               actions={
                 <ActionPanel>
                   <Action
