@@ -521,7 +521,7 @@ const Command: React.FC = () => {
                           Toast.Style.Success,
                           'IP information updated'
                         );
-                      } catch (error) {
+                      } catch {
                         await showToast(
                           Toast.Style.Failure,
                           'Failed to update IP information'
