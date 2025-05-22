@@ -556,14 +556,8 @@ const Command: React.FC = () => {
               title="Current IP Address and Location"
               subtitle={currentIP}
               icon={{ source: Icon.Network }}
-              accessories={[{ icon: Icon.Eye }]}
               actions={
                 <ActionPanel>
-                  <Action
-                    title="View Vpn Details"
-                    icon={Icon.Sidebar}
-                    onAction={() => navigateTo('serverDetails')}
-                  />
                   <Action
                     title="Refresh Ip and Location"
                     icon={Icon.RotateClockwise}
@@ -580,9 +574,11 @@ const Command: React.FC = () => {
                           'IP information updated'
                         );
                       } catch (error) {
+                        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
                         await showToast(
                           Toast.Style.Failure,
-                          'Failed to update IP information'
+                          'Failed to update IP information',
+                          errorMessage
                         );
                       }
                     }}
@@ -594,6 +590,7 @@ const Command: React.FC = () => {
             <List.Item
               title="View Detailed VPN Status"
               icon={{ source: Icon.Sidebar }}
+              accessories={[{ icon: Icon.Eye }]}
               actions={
                 <ActionPanel>
                   <Action
