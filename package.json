@@ -29,12 +29,15 @@
     "@types/react": "^19.0.10",
     "eslint": "^8.57.1",
     "prettier": "^3.4.2",
-    "react-devtools": "^6.1.2",
+    "react-devtools": "6.1.1",
     "typescript": "^5.7.2"
   },
   "overrides": {
     "electron": "^33.2.1",
-    "eslint": "^8.57.1"
+    "eslint": "^8.57.1",
+    "cross-spawn": "^7.0.6",
+    "got": "^13.0.0",
+    "react-devtools": "6.1.1"
   },
   "scripts": {
     "build": "ray build -e dist",
