@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  List,
-  showToast,
-  Toast,
-  ActionPanel,
-  Action,
-  Icon,
-  Color,
-} from '@raycast/api';
+import * as Raycast from '@raycast/api';
 import { fetchCurrentIP } from './utils/fetchCurrentIP';
 import { checkVpnStatus, runCommand } from './utils/vpnService';
 import VpnStatus from './components/vpnStatus';
@@ -17,6 +9,67 @@ import ServerDetails from './components/serverDetails';
 import fs from 'fs';
 
 const MOZILLA_VPN_PATH = '/Applications/Mozilla Vpn.app';
+
+// Extract components with explicit typing to avoid type conflicts
+const showToast = Raycast.showToast;
+const Toast = Raycast.Toast;
+const Icon = Raycast.Icon;
+const Color = Raycast.Color;
+
+// Define proper types for Action to avoid 'any' usage
+interface ActionProps {
+  title: string;
+  icon?: unknown;
+  onAction?: () => void;
+  shortcut?: unknown;
+}
+
+interface ActionComponent {
+  (props: ActionProps): React.ReactElement | null;
+  OpenInBrowser: React.ComponentType<Record<string, unknown>>;
+  Push: React.ComponentType<Record<string, unknown>>;
+  Pop: React.ComponentType<Record<string, unknown>>;
+  Copy: React.ComponentType<Record<string, unknown>>;
+  Paste: React.ComponentType<Record<string, unknown>>;
+  ShowInFinder: React.ComponentType<Record<string, unknown>>;
+  Open: React.ComponentType<Record<string, unknown>>;
+  OpenWith: React.ComponentType<Record<string, unknown>>;
+  SubmitForm: React.ComponentType<Record<string, unknown>>;
+  Trash: React.ComponentType<Record<string, unknown>>;
+}
+
+// Type assertion to bypass the complex intersection type issue for Action
+const Action = (Raycast as unknown as { Action: ActionComponent }).Action;
+
+// Define proper types for ActionPanel to avoid 'any' usage
+interface ActionPanelProps {
+  children?: React.ReactNode;
+}
+
+interface ActionPanelComponent {
+  (props: ActionPanelProps): React.ReactElement | null;
+  Section: React.ComponentType<Record<string, unknown>>;
+}
+
+// Type assertion to bypass the complex intersection type issue for ActionPanel
+const ActionPanel = (Raycast as unknown as { ActionPanel: ActionPanelComponent }).ActionPanel;
+
+// Define proper types to avoid 'any' usage and interface extension issues
+interface ListProps {
+  isLoading?: boolean;
+  navigationTitle?: string;
+  children?: React.ReactNode;
+}
+
+interface ListComponent {
+  (props: ListProps): React.ReactElement | null;
+  Item: React.ComponentType<Record<string, unknown>>;
+  Section: React.ComponentType<Record<string, unknown>>;
+  EmptyView: React.ComponentType<Record<string, unknown>>;
+}
+
+// Type assertion to bypass the complex intersection type issue
+const List = (Raycast as unknown as { List: ListComponent }).List;
 
 // Define view types for navigation
 type ViewType = 'main' | 'serverSelector' | 'serverDetails';
@@ -178,6 +231,7 @@ const Command: React.FC = () => {
       }
     }
   };
+
   const handleServerSelected = async () => {
     navigateBack(); // Navigate back to main view
     setIsLoading(true);
@@ -412,6 +466,7 @@ const Command: React.FC = () => {
       setIsLoading(false);
     }
   };
+
   if (isLoading) {
     return <List isLoading={true} />;
   }
