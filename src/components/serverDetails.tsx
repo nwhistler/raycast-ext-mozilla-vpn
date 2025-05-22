@@ -61,7 +61,9 @@ interface ActionComponent {
 
 // Type assertions to bypass the complex intersection type issues
 const Detail = (Raycast as unknown as { Detail: DetailComponent }).Detail;
-const ActionPanel = (Raycast as unknown as { ActionPanel: ActionPanelComponent }).ActionPanel;
+const ActionPanel = (
+  Raycast as unknown as { ActionPanel: ActionPanelComponent }
+).ActionPanel;
 const Action = (Raycast as unknown as { Action: ActionComponent }).Action;
 
 interface ServerDetailsProps {

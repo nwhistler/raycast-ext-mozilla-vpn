@@ -52,7 +52,9 @@ interface ActionPanelComponent {
 }
 
 // Type assertion to bypass the complex intersection type issue for ActionPanel
-const ActionPanel = (Raycast as unknown as { ActionPanel: ActionPanelComponent }).ActionPanel;
+const ActionPanel = (
+  Raycast as unknown as { ActionPanel: ActionPanelComponent }
+).ActionPanel;
 
 // Define proper types to avoid 'any' usage and interface extension issues
 interface ListProps {
@@ -574,7 +576,10 @@ const Command: React.FC = () => {
                           'IP information updated'
                         );
                       } catch (error) {
-                        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+                        const errorMessage =
+                          error instanceof Error
+                            ? error.message
+                            : 'Unknown error occurred';
                         await showToast(
                           Toast.Style.Failure,
                           'Failed to update IP information',

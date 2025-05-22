@@ -56,7 +56,9 @@ interface ActionComponent {
 
 // Type assertions to bypass the complex intersection type issues
 const List = (Raycast as unknown as { List: ListComponent }).List;
-const ActionPanel = (Raycast as unknown as { ActionPanel: ActionPanelComponent }).ActionPanel;
+const ActionPanel = (
+  Raycast as unknown as { ActionPanel: ActionPanelComponent }
+).ActionPanel;
 const Action = (Raycast as unknown as { Action: ActionComponent }).Action;
 
 interface CheckLoginProps {
