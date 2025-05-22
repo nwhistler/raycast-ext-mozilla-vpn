@@ -503,9 +503,7 @@ const Command: React.FC = () => {
               icon={{ source: Icon.Network }}
               actions={
                 <ActionPanel>
-                  <Action
-                    title=""
-                  />
+                  <Action title="" />
                   <Action
                     title="Refresh Ip and Location"
                     icon={Icon.RotateClockwise}
